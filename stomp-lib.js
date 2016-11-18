@@ -9,27 +9,36 @@ function getDestination(destination, destinationType) {
     return '/' + destinationType + '/' + destination;
 }
 
-function publishMessage(host, port, destination, destinationType, message) {
-  var url = host + ':' + port;
-  client = publishers[url] = publishers[url] ||
-    stomp.createClient(
-        {
-            host: host,
-            port: port,
-            retryOnClosed: true,
-        }
-    );
-  client.publish('/' + destinationType + '/' + destination, message);
+function publishMessage(destination, destinationType, message) {
+  var id = destination + ':' + destinationType;
+  var publisher = publishers[id];
+  publisher.publish('/' + destinationType + '/' + destination, message);
+}
+
+function publishMessageToHost(host, port, destination, destinationType, message) {
+  var publisher = getOrCreatePublisher(host, port, destination, destinationType);
+  publisher.publish('/' + destinationType + '/' + destination, message);
+}
+
+function getOrCreatePublisher(host, port, destination, destinationType) {
+  var id = destination + ':' + destinationType;
+  return publishers[id] = publishers[id] || stomp.createClient(
+            {
+                host: host,
+                port: port,
+                retryOnClosed: true,
+            });
 }
 
 function subscribe(host, port, destination, destinationType) {
 	var dest = getDestination(destination, destinationType);
-	var client = subscriptions[destination] = subscriptions[destination] || new Stomp(host, port);
+	var subscription = subscriptions[destination] = subscriptions[destination] || new Stomp(host, port);
+  getOrCreatePublisher(host, port, destination, destinationType);
 
   msgctx = context.__STOMP__ = context.__STOMP__ || {}
   msgctx[destination] = msgctx[destination] || [];
-  client.connect(function (sessionId) {
-      client.subscribe(dest, function (body, headers) {
+  subscription.connect(function (sessionId) {
+      subscription.subscribe(dest, function (body, headers) {
           var msg = {
               body: body,
               headers: headers
@@ -84,5 +93,6 @@ module.exports = {
     'unsubscribe' : unsubscribe,
     'getMessages' : getMessages,
     'flush' : flush,
-    'publishMessage' : publishMessage
+    'publishMessage' : publishMessage,
+    'publishMessageToHost' : publishMessageToHost
 };
