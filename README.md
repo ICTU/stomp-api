@@ -33,9 +33,8 @@ PUT the following application/json to URL: localhost:3000/queues/test
 To publish to a subscription:
 PUT the following application/json to URL: localhost:3000/queues/subscriptions/test
 ```
-{
 	<message payload>
-}
+```
 
 To get all messages received (since subscribing) from a queue:
 GET the following URL: localhost:3000/queues/test
