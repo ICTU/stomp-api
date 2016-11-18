@@ -1,25 +1,17 @@
 var Stomp = require('stomp-client');
 var stomp = require('stompy');
 var JSONPath = require('jsonpath-plus');
-var clients = {};
-var publishClients = {};
+var subscriptions = {};
+var publishers = {};
 var context = {};
 
 function getDestination(destination, destinationType) {
     return '/' + destinationType + '/' + destination;
 }
 
-function unsubscribe(destination, destinationType) {
-  var dest = getDestination(destination, destinationType);
-
-	clients[topic].unsubscribe(dest);
-	clients[topic].disconnect();
-	clients[topic] = null;
-}
-
 function publishMessage(host, port, destination, destinationType, message) {
   var url = host + ':' + port;
-  client = publishClients[url] = publishClients[url] ||
+  client = publishers[url] = publishers[url] ||
     stomp.createClient(
         {
             host: host,
@@ -30,23 +22,29 @@ function publishMessage(host, port, destination, destinationType, message) {
   client.publish('/' + destinationType + '/' + destination, message);
 }
 
-
-
 function subscribe(host, port, destination, destinationType) {
 	var dest = getDestination(destination, destinationType);
-	var client = clients[destination] = clients[destination] || new Stomp(host, port);
+	var client = subscriptions[destination] = subscriptions[destination] || new Stomp(host, port);
 
-    msgctx = context.__STOMP__ = context.__STOMP__ || {}
-    msgctx[destination] = msgctx[destination] || [];
-    client.connect(function (sessionId) {
-        client.subscribe(dest, function (body, headers) {
-            var msg = {
-                body: body,
-                headers: headers
-            };
-            msgctx[destination].push(msg);
-        });
-    });
+  msgctx = context.__STOMP__ = context.__STOMP__ || {}
+  msgctx[destination] = msgctx[destination] || [];
+  client.connect(function (sessionId) {
+      client.subscribe(dest, function (body, headers) {
+          var msg = {
+              body: body,
+              headers: headers
+          };
+          msgctx[destination].push(msg);
+      });
+  });
+}
+
+function unsubscribe(destination, destinationType) {
+  var dest = getDestination(destination, destinationType);
+
+	subscriptions[topic].unsubscribe(dest);
+	subscriptions[topic].disconnect();
+	subscriptions[topic] = null;
 }
 
 function getMessages(destination) {
