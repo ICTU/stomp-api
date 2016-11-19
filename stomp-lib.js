@@ -11,7 +11,7 @@ function getDestination(destination, destinationType) {
 
 function publishMessage(host, port, destination, destinationType, message) {
   var id = destination + ':' + destinationType;
-  return publishers[id] = publishers[id] || stomp.createClient(
+  var publisher = publishers[id] = publishers[id] || stomp.createClient(
             {
                 host: host,
                 port: port,
