@@ -15,6 +15,13 @@ You need to specify the following environment variables:
 	port=<the STOMP port>
 ```
 
+## Running in docker
+```
+	docker build -t stomp-api .
+	docker run -it --rm -p 3000:3000 --name stomp-api-service -e host=<queue host> -e port=<stomp port> stomp-api
+
+```
+
 ## API by example
 To subscribe to a queue (this will start buffering all incoming messages):
 PUT the following application/json to URL: localhost:3000/queues/subscriptions
