@@ -16,12 +16,12 @@ app.put('/topics/subscriptions', function(req, res) {
 })
 
 app.put('/queues/:queue', function (req, res) {
-  StompLib.publishMessageToHost(process.env.host, process.env.port, req.params.queue, 'queue', req.body.message);
+  StompLib.publishMessage(process.env.host, process.env.port, req.params.queue, 'queue', req.body.message);
   return res.json(req.body);
 })
 
 app.put('/topics/:topic', function (req, res) {
-  StompLib.publishMessageToHost(process.env.host, process.env.port, req.params.topic, 'topic', req.body.message);
+  StompLib.publishMessage(process.env.host, process.env.port, req.params.topic, 'topic', req.body.message);
   return res.json(req.body);
 })
 

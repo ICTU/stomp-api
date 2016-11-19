@@ -1,10 +1,9 @@
 #stomp-api
+A REST-full interface for a STOMP-queue (e.g. ActiveMQ);
 =====
 
 ## Disclaimer
 Do not use this api for production, it is built for testing purposes.
-
-A REST-full interface for a STOMP-queue (e.g. ActiveMQ);
 
 ## How does it work
 You can subscribe to a queue or a topic, publish (put) messages and show all received messages.
