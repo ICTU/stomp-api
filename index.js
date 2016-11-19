@@ -6,12 +6,12 @@ var app = express()
 app.use(bodyParser.json())
 
 app.put('/queues/subscriptions', function(req, res) {
-  StompLib.subscribe(req.body.host, req.body.port, req.body.queue, 'queue');
+  StompLib.subscribe(process.env.host, process.env.port, req.body.queue, 'queue');
   return res.json(req.body);
 })
 
 app.put('/topics/subscriptions', function(req, res) {
-  StompLib.subscribe(req.body.host, req.body.port, req.body.topic, 'topic');
+  StompLib.subscribe(process.env.host, process.env.port, req.body.topic, 'topic');
   return res.json(req.body);
 })
 
@@ -26,12 +26,12 @@ app.put('/topics/subscriptions/:topic', function(req, res) {
 })
 
 app.put('/queues/:queue', function (req, res) {
-  StompLib.publishMessageToHost(req.body.host, req.body.port, req.params.queue, 'queue', req.body.message);
+  StompLib.publishMessageToHost(process.env.host, process.env.port, req.params.queue, 'queue', req.body.message);
   return res.json(req.body);
 })
 
 app.put('/topics/:topic', function (req, res) {
-  StompLib.publishMessageToHost(req.body.host, req.body.port, req.params.topic, 'topic', req.body.message);
+  StompLib.publishMessageToHost(process.env.host, process.env.port, req.params.topic, 'topic', req.body.message);
   return res.json(req.body);
 })
 
