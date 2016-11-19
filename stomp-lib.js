@@ -9,18 +9,7 @@ function getDestination(destination, destinationType) {
     return '/' + destinationType + '/' + destination;
 }
 
-function publishMessage(destination, destinationType, message) {
-  var id = destination + ':' + destinationType;
-  var publisher = publishers[id];
-  publisher.publish('/' + destinationType + '/' + destination, message);
-}
-
-function publishMessageToHost(host, port, destination, destinationType, message) {
-  var publisher = getOrCreatePublisher(host, port, destination, destinationType);
-  publisher.publish('/' + destinationType + '/' + destination, message);
-}
-
-function getOrCreatePublisher(host, port, destination, destinationType) {
+function publishMessage(host, port, destination, destinationType, message) {
   var id = destination + ':' + destinationType;
   return publishers[id] = publishers[id] || stomp.createClient(
             {
@@ -28,12 +17,13 @@ function getOrCreatePublisher(host, port, destination, destinationType) {
                 port: port,
                 retryOnClosed: true,
             });
+
+  publisher.publish('/' + destinationType + '/' + destination, message);
 }
 
 function subscribe(host, port, destination, destinationType) {
 	var dest = getDestination(destination, destinationType);
 	var subscription = subscriptions[destination] = subscriptions[destination] || new Stomp(host, port);
-  getOrCreatePublisher(host, port, destination, destinationType);
 
   msgctx = context.__STOMP__ = context.__STOMP__ || {}
   msgctx[destination] = msgctx[destination] || [];
@@ -93,6 +83,5 @@ module.exports = {
     'unsubscribe' : unsubscribe,
     'getMessages' : getMessages,
     'flush' : flush,
-    'publishMessage' : publishMessage,
-    'publishMessageToHost' : publishMessageToHost
+    'publishMessage' : publishMessage
 };

@@ -15,16 +15,6 @@ app.put('/topics/subscriptions', function(req, res) {
   return res.json(req.body);
 })
 
-app.put('/queues/subscriptions/:queue', function(req, res) {
-  StompLib.publishMessage(req.params.queue, 'queue', req.body);
-  return res.json(req.body);
-})
-
-app.put('/topics/subscriptions/:topic', function(req, res) {
-  StompLib.publishMessage(req.params.topic, 'topic', req.body);
-  return res.json(req.body);
-})
-
 app.put('/queues/:queue', function (req, res) {
   StompLib.publishMessageToHost(process.env.host, process.env.port, req.params.queue, 'queue', req.body.message);
   return res.json(req.body);
