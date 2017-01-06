@@ -1,13 +1,13 @@
 {
   "name": "stomp-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A RESTfull interface for STOMP",
   "main": "index.js",
   "dependencies": {
     "stompy": "^1.5.0",
     "stomp-client": "^0.8.1",
     "jsonpath-plus": "0.15.0",
-    "express" : "4.14.0",
+    "express": "4.14.0",
     "body-parser": "^1.15.2"
   },
   "repository": {
