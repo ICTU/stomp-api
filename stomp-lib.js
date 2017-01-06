@@ -50,6 +50,10 @@ function getMessages(destination) {
   return context.__STOMP__[destination];
 }
 
+function pop(destination) {
+  return getMessages(destination).pop();
+}
+
 function getMsgCount(destination) {
     return context.__STOMP__[destination].length;
 }
