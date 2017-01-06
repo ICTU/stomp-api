@@ -1,6 +1,7 @@
 var Stomp = require('stomp-client');
 var stomp = require('stompy');
 var JSONPath = require('jsonpath-plus');
+var Q = require('q')
 var subscriptions = {};
 var publishers = {};
 var context = {};
@@ -50,8 +51,15 @@ function getMessages(destination) {
   return context.__STOMP__[destination];
 }
 
-function pop(destination) {
-  return getMessages(destination).pop();
+
+function pop(destination, callback) {
+    result = context.__STOMP__[destination].pop();
+    
+    if(result) {
+        callback(result);
+    } else {
+        Q.delay(2000).done(function() { popMessage(destination, callback) });
+    }
 }
 
 function getMsgCount(destination) {
@@ -87,5 +95,6 @@ module.exports = {
     'unsubscribe' : unsubscribe,
     'getMessages' : getMessages,
     'flush' : flush,
-    'publishMessage' : publishMessage
+    'publishMessage' : publishMessage,
+    'pop' : pop
 };

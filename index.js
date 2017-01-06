@@ -34,11 +34,15 @@ app.get('/topics/:topic', function (req, res) {
 })
 
 app.get('/queues/:queue/pop', function (req, res) {
-  return res.json(StompLib.pop(req.params.queue));
+  StompLib.pop(req.params.queue).then(function(result) {
+    return res.json(result);
+  });
 })
 
 app.get('/topics/:topic/pop', function (req, res) {
-  return res.json(StompLib.pop(req.params.topic));
+  StompLib.pop(req.params.topic, function(result) {
+    return res.json(result);
+  });
 })
 
 app.listen(3000, function () {
