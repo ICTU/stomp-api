@@ -24,7 +24,11 @@ function publishMessage(host, port, destination, destinationType, message) {
 
 function subscribe(host, port, destination, destinationType) {
     var dest = getDestination(destination, destinationType);
-    var subscription = subscriptions[destination] = subscriptions[destination] || new Stomp(host, port);
+    if(subscriptions[destination]) {
+        return;
+    }
+
+    var subscription = subscriptions[destination] = new Stomp(host, port);
 
     msgctx = context.__STOMP__ = context.__STOMP__ || {}
     msgctx[destination] = msgctx[destination] || [];
@@ -63,35 +67,11 @@ function pop(destination, callback) {
     }
 }
 
-function getMsgCount(destination) {
-    return context.__STOMP__[destination].length;
-}
-
-function getMessage(destination, path, value) {
-    var found = false;
-    context.__STOMP__[destination].forEach(function (msg) {
-        var json = JSON.parse(msg.body);
-        var result = getMessageAtIdentifier(json, path, value);
-
-        expect(result).not.toBeNull("No message found for the identifier " + path + "[" + value + "]");
-
-        return result;
-    });
-}
-
-function getMessageAtIdentifier(json, path, value) {
-    var result = JSONPath({ json: json, path: path });
-    return result.length > 0 && result[0] == value ? result[0] : null;
-}
-
 function flush(destination) {
     context.__STOMP__[destination] = [];
 }
 
 module.exports = {
-    'getMessageAtIdentifier': getMessageAtIdentifier,
-    'getMessage': getMessage,
-    'getMsgCount': getMsgCount,
     'subscribe': subscribe,
     'unsubscribe': unsubscribe,
     'getMessages': getMessages,
