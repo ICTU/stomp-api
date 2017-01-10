@@ -5,12 +5,12 @@ var app = express()
 
 app.use(bodyParser.json())
 
-app.put('/queues/subscriptions', function(req, res) {
+app.put('/queues/subscriptions', function (req, res) {
   StompLib.subscribe(process.env.host, process.env.port, req.body.queue, 'queue');
   return res.json(req.body);
 })
 
-app.put('/topics/subscriptions', function(req, res) {
+app.put('/topics/subscriptions', function (req, res) {
   StompLib.subscribe(process.env.host, process.env.port, req.body.topic, 'topic');
   return res.json(req.body);
 })
@@ -34,13 +34,13 @@ app.get('/topics/:topic', function (req, res) {
 })
 
 app.get('/queues/:queue/pop', function (req, res) {
-  StompLib.pop(req.params.queue).then(function(result) {
+  StompLib.pop(req.params.queue).then(function (result) {
     return res.json(result);
   });
 })
 
 app.get('/topics/:topic/pop', function (req, res) {
-  StompLib.pop(req.params.topic, function(result) {
+  StompLib.pop(req.params.topic, function (result) {
     return res.json(result);
   });
 })
