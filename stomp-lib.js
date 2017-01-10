@@ -53,9 +53,8 @@ function getMessages(destination) {
     return context.__STOMP__[destination];
 }
 
-
 function pop(destination, callback) {
-    result = context.__STOMP__[destination].pop();
+    var result = context.__STOMP__[destination].pop();
 
     if (result) {
         callback(result);
