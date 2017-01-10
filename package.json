@@ -1,6 +1,6 @@
 {
   "name": "stomp-api",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A RESTfull interface for STOMP",
   "main": "index.js",
   "dependencies": {
