@@ -49,12 +49,6 @@ app.listen(3000, function () {
   console.log('Listening on port 3000!')
 })
 
-app.on('connection', function(socket) {
-  console.log("A new connection was made by a client.");
-  socket.setTimeout(10 * 60 * 1000); 
-  // 10 minute timeout. Change this as you see fit.
-})
-
 function getMessages(destination) {
   var messages = StompLib.getMessages(destination);
   StompLib.flush(destination);
