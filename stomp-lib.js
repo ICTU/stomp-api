@@ -59,12 +59,7 @@ function getMessages(destination) {
 
 function pop(destination, callback) {
     var result = context.__STOMP__[destination].pop();
-
-    if (result) {
-        callback(result);
-    } else {
-        Q.delay(2000).done(function () { pop(destination, callback) });
-    }
+    callback(result);
 }
 
 function flush(destination) {

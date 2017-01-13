@@ -15,17 +15,17 @@ app.put('/topics/subscriptions', function (req, res) {
   return res.json(req.body);
 })
 
-app.put('/queues/:queue', function (req, res) {
+app.put('/queues/:queue*', function (req, res) {
   StompLib.publishMessage(process.env.host, process.env.port, req.params.queue, 'queue', req.body.message);
   return res.json(req.body);
 })
 
-app.put('/topics/:topic', function (req, res) {
+app.put('/topics/:topic*', function (req, res) {
   StompLib.publishMessage(process.env.host, process.env.port, req.params.topic, 'topic', req.body.message);
   return res.json(req.body);
 })
 
-app.get('/queues/:queue', function (req, res) {
+app.get('/queues/:queue*', function (req, res) {
   return res.json(getMessages(req.params.queue));
 })
 
@@ -47,6 +47,12 @@ app.get('/topics/:topic/pop', function (req, res) {
 
 app.listen(3000, function () {
   console.log('Listening on port 3000!')
+})
+
+app.on('connection', function(socket) {
+  console.log("A new connection was made by a client.");
+  socket.setTimeout(10 * 60 * 1000); 
+  // 10 minute timeout. Change this as you see fit.
 })
 
 function getMessages(destination) {
